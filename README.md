@@ -5,10 +5,6 @@ Terraform module to configure an allspark network configuration.
 This module will create vnets, storage accounts, ssh keys.
 
 ## Input variables
-  * azurerm_subscription_id [required]
-  * azurerm_client_id [required]
-  * azurerm_client_secret [required]
-  * azurerm_tenant_id [required]
   * azurerm_location [optional - 'UK West']
   * allspark_ssh_dir [optional - '~/']
   * allspark_admin_name [optional - allsparkadmin]
@@ -32,10 +28,6 @@ This module will create vnets, storage accounts, ssh keys.
 
     module "allspark" {
       source  = "github.com/broomyocymru/tf_azurerm_allspark"
-      azurerm_subscription_id = "..."
-      azurerm_client_id = "..."
-      azurerm_client_secret = "..."
-      azurerm_tenant_id = "..."
     }
 
 
