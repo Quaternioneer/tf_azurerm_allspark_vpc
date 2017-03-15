@@ -6,7 +6,7 @@ This module will create vnets, storage accounts, ssh keys.
 
 ## Input variables
   * azurerm_location [optional - 'UK West']
-  * allspark_ssh_dir [optional - '~/']
+  * allspark_ssh_dir [optional - './ssh']
   * allspark_admin_name [optional - allsparkadmin]
   * allspark_dev_name [optional - allsparkdev]
   * allspark_prod_name [optional - allsparkprod]

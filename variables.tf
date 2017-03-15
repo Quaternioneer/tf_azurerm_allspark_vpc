@@ -5,7 +5,7 @@ variable "azurerm_location" {
 
 variable "allspark_ssh_dir" {
   description = "Output path of generated ssh keys"
-  default = "~/"
+  default = "./ssh"
 }
 
 variable "allspark_admin_name" {
