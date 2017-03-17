@@ -1,14 +1,6 @@
 
 # ssh keypair
-resource "tls_private_key" "admin_ssh" {
-  algorithm = "RSA"
-}
-
-resource "tls_private_key" "prod_ssh" {
-  algorithm = "RSA"
-}
-
-resource "tls_private_key" "dev_ssh" {
+resource "tls_private_key" "ssh" {
   algorithm = "RSA"
 }
 
@@ -27,30 +19,10 @@ resource "null_resource" "ssh_key_gen" {
   }
 
   provisioner "local-exec" {
-    command = "echo '${tls_private_key.admin_ssh.private_key_pem}' > ${path.cwd}${var.allspark_ssh_dir}/allspark_admin_rsa && chmod 600 ${path.cwd}${var.allspark_ssh_dir}/allspark_admin_rsa"
+    command = "echo '${tls_private_key.ssh.private_key_pem}' > ${path.cwd}${var.allspark_ssh_dir}/allspark_rsa && chmod 600 ${path.cwd}${var.allspark_ssh_dir}/allspark_rsa"
   }
 
   provisioner "local-exec" {
-    command = "echo '${tls_private_key.admin_ssh.public_key_pem}' > ${path.cwd}${var.allspark_ssh_dir}/allspark_admin_rsa.pub && chmod 600 ${path.cwd}${var.allspark_ssh_dir}/allspark_admin_rsa.pub"
-  }
-
-  provisioner "local-exec" {
-    command = "chmod 600 ${path.cwd}${var.allspark_ssh_dir}/allspark_admin_rsa.pub"
-  }
-
-  provisioner "local-exec" {
-    command = "echo '${tls_private_key.dev_ssh.private_key_pem}' > ${path.cwd}${var.allspark_ssh_dir}/allspark_dev_rsa && chmod 600 ${path.cwd}${var.allspark_ssh_dir}/allspark_dev_rsa"
-  }
-
-  provisioner "local-exec" {
-    command = "echo '${tls_private_key.dev_ssh.public_key_pem}' > ${path.cwd}${var.allspark_ssh_dir}/allspark_dev_rsa.pub && chmod 600 ${path.cwd}${var.allspark_ssh_dir}/allspark_dev_rsa.pub"
-  }
-
-  provisioner "local-exec" {
-    command = "echo '${tls_private_key.prod_ssh.private_key_pem}' > ${path.cwd}${var.allspark_ssh_dir}/allspark_prod_rsa && chmod 600 ${path.cwd}${var.allspark_ssh_dir}/allspark_prod_rsa"
-  }
-
-  provisioner "local-exec" {
-    command = "echo '${tls_private_key.prod_ssh.public_key_pem}' > ${path.cwd}${var.allspark_ssh_dir}/allspark_prod_rsa.pub && chmod 600 ${path.cwd}${var.allspark_ssh_dir}/allspark_prod_rsa.pub"
+    command = "echo '${tls_private_key.ssh.public_key_pem}' > ${path.cwd}${var.allspark_ssh_dir}/allspark_rsa.pub && chmod 600 ${path.cwd}${var.allspark_ssh_dir}/allspark_rsa.pub"
   }
 }

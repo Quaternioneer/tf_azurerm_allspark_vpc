@@ -8,19 +8,9 @@ variable "allspark_ssh_dir" {
   default = "/ssh"
 }
 
-variable "allspark_admin_name" {
+variable "allspark_name" {
   description = "Name of the admin resource group, used for DevOps tools"
-  default     = "allsparkadmin"
-}
-
-variable "allspark_dev_name" {
-  description = "Name of the dev resource group, used for hosting the development environment"
-  default     = "allsparkdev"
-}
-
-variable "allspark_prod_name" {
-  description = "Name of the prod resource group, used for hosting the production environment"
-  default     = "allsparkprod"
+  default     = "allspark"
 }
 
 variable "allspark_admin_address_space" {
