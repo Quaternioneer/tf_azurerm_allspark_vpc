@@ -1,5 +1,5 @@
 # Resource Groups
 resource "azurerm_resource_group" "allspark" {
-  name     = "Default Resource Group"
+  name     = "${var.allspark_name}"
   location = "${var.azurerm_location}"
 }
