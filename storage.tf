@@ -10,21 +10,21 @@ resource "azurerm_storage_account" "allspark" {
 }
 
 resource "azurerm_storage_container" "admin" {
-  name                  = "admin_vhds"
+  name                  = "admin"
   resource_group_name   = "${azurerm_resource_group.allspark.name}"
   storage_account_name  = "${azurerm_storage_account.allspark.name}"
   container_access_type = "private"
 }
 
 resource "azurerm_storage_container" "dev" {
-  name                  = "dev_vhds"
+  name                  = "dev"
   resource_group_name   = "${azurerm_resource_group.allspark.name}"
   storage_account_name  = "${azurerm_storage_account.allspark.name}"
   container_access_type = "private"
 }
 
 resource "azurerm_storage_container" "prod" {
-  name                  = "prod_vhds"
+  name                  = "prod"
   resource_group_name   = "${azurerm_resource_group.allspark.name}"
   storage_account_name  = "${azurerm_storage_account.allspark.name}"
   container_access_type = "private"
