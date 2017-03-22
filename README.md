@@ -4,17 +4,19 @@ tf_azurerm_allspark
 Terraform module to configure an allspark network configuration.
 This module will create vnets, storage accounts, ssh keys.
 
+todo - nsg and bastion with public ip!
+
 ## Input variables
   * azurerm_location [optional - 'UK West']
   * allspark_ssh_dir [optional - './ssh']
-  * allspark_name [optional - allspark]
+  * name [required]
   * allspark_admin_address_space [optional - 172.10.0.0]
   * allspark_dev_address_space [optional - 172.11.0.0]
   * allspark_prod_address_space [optional - 172.12.0.0]
 
 
 ## Outputs
-  * allspark_data - map 
+  * allspark_data - map
 
 
 ## Example use
