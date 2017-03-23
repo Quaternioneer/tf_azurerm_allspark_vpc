@@ -12,5 +12,8 @@ output "allspark_data" {
     storage_container_name = "${list(azurerm_storage_container.storage.*.name)}"
     storage_account_name = "${azurerm_storage_account.storage.name}"
     storage_account_endpoint = "${azurerm_storage_account.storage.primary_blob_endpoint}"
+
+    # Firewall
+    nsg_id = "${list(azurerm_network_security_group.nsg.*.id)}"
   }
 }
