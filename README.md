@@ -7,12 +7,11 @@ This module will create vnets, storage accounts, ssh keys.
 todo - nsg and bastion with public ip!
 
 ## Input variables
-  * azurerm_location [optional - 'UK West']
-  * allspark_ssh_dir [optional - './ssh']
   * name [required]
-  * allspark_admin_address_space [optional - 172.10.0.0]
-  * allspark_dev_address_space [optional - 172.11.0.0]
-  * allspark_prod_address_space [optional - 172.12.0.0]
+  * location [optional - 'UK West']
+  * ssh_dir [optional - './ssh']
+  * subnets [optional - ["172.10.0.0", "172.11.0.0", "172.12.0.0"]]
+  * subnet_names [optional - ["admin", "dev", "prod"]]
 
 
 ## Outputs
@@ -23,6 +22,7 @@ todo - nsg and bastion with public ip!
 
     module "allspark" {
       source  = "github.com/broomyocymru/tf_azurerm_allspark"
+      name = "allspark"
     }
 
 
