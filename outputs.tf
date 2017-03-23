@@ -5,6 +5,7 @@ output "allspark_data" {
     ssh_public = "${tls_private_key.ssh.public_key_openssh}"
 
     # Network Settings
+    subnet_index = "${join(",", var.subnet_names)}"
     subnet_name = "${join(",", azurerm_subnet.subnet.*.name)}"
     subnet_id = "${join(",", azurerm_subnet.subnet.*.id)}"
 
