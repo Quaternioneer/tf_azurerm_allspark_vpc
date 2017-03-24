@@ -14,7 +14,7 @@ output "allspark_data" {
     storage_account_name = "${azurerm_storage_account.storage.name}"
     storage_account_endpoint = "${azurerm_storage_account.storage.primary_blob_endpoint}"
 
-    # Firewall
-    nsg_name = "${join(",", azurerm_network_security_group.nsg.*.name)}"
+    # Firewall Group - Configure rules externally
+    nsg_name = "${azurerm_network_security_group.nsg.name}"
   }
 }
