@@ -16,3 +16,10 @@ resource "azurerm_storage_container" "storage" {
   storage_account_name  = "${azurerm_storage_account.storage.name}"
   container_access_type = "private"
 }
+
+resource "azurerm_storage_container" "bastion" {
+  name                  = "bastion"
+  resource_group_name   = "${azurerm_resource_group.resource_group.name}"
+  storage_account_name  = "${azurerm_storage_account.storage.name}"
+  container_access_type = "private"
+}
