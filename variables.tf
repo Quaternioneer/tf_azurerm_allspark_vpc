@@ -14,17 +14,12 @@ variable "ssh_dir" {
 
 variable "subnets" {
   description = "Address spaces"
-  default     = ["172.11.0.0", "172.12.0.0", "172.13.0.0"]
+  default     = ["172.10.0.0", "172.11.0.0", "172.12.0.0"]
 }
 
 variable "subnet_names" {
   description = "Address spaces"
   default     = ["admin", "dev", "prod"]
-}
-
-variable "bastion_subnet" {
-  description = "Address spaces"
-  default     = "172.10.0.0"
 }
 
 variable "bastion_username" {

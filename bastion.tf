@@ -1,65 +1,29 @@
-resource "azurerm_public_ip" "bastion_ip" {
-  name                         = "bastion_ip"
-  location                     = "${var.location}"
-  resource_group_name          = "${azurerm_resource_group.resource_group.name}"
-  public_ip_address_allocation = "dynamic"
-}
-
-resource "azurerm_network_interface" "public_nic" {
-    name = "bastion_nic1"
+module "bastion" {
+  source    = "github.com/broomyocymru/tf_azurerm_allspark_vm"
+  name      = "${var.name}_bastion"
+  username = "${var.bastion_username}"
+  subnet = "${element(var.subnets,0)}"
+  vm = "std_ubuntu_server"
+  allspark = {
     location = "${var.location}"
     resource_group_name = "${azurerm_resource_group.resource_group.name}"
+    ssh_public = "${tls_private_key.ssh.public_key_openssh}"
 
-    ip_configuration {
-        name = "bastion_ip"
-        subnet_id = "${azurerm_subnet.bastion.id}"
-        private_ip_address_allocation = "dynamic"
-        public_ip_address_id = "${azurerm_public_ip.bastion_ip.id}"
-    }
-}
+    # Network Settings
+    subnet_index = "${join(",", var.subnet_names)}"
+    subnet_name = "${join(",", azurerm_subnet.subnet.*.name)}"
+    subnet_id = "${join(",", azurerm_subnet.subnet.*.id)}"
 
-resource "azurerm_virtual_machine" "bastion" {
-    name = "bastion"
-    location = "${var.location}"
-    resource_group_name = "${azurerm_resource_group.resource_group.name}"
-    network_interface_ids = ["${azurerm_network_interface.public_nic.id}"]
-    vm_size = "Standard_D2_v2"
+    # Storage Details
+    storage_container_name = "${join(",", azurerm_storage_container.storage.*.name)}"
+    storage_account_name = "${azurerm_storage_account.storage.name}"
+    storage_account_endpoint = "${azurerm_storage_account.storage.primary_blob_endpoint}"
 
-    storage_image_reference {
-        publisher = "Canonical"
-        offer = "UbuntuServer"
-        sku = "16.04-LTS"
-        version = "latest"
-    }
-
-    storage_os_disk {
-        name = "${var.name}_os"
-        vhd_uri = "${azurerm_storage_account.storage.primary_blob_endpoint}${azurerm_storage_container.bastion.name}/bastion_os_disk.vhd"
-        caching = "ReadWrite"
-        create_option = "FromImage"
-    }
-
-    os_profile {
-        computer_name = "${var.name}_bastion"
-        admin_username = "${var.bastion_username}"
-        admin_password = "${var.bastion_password}"
-    }
-
-    os_profile_linux_config {
-        disable_password_authentication = true
-
-        ssh_keys {
-          path = "/home/${var.bastion_username}/.ssh/authorized_keys"
-          key_data = "${tls_private_key.ssh.public_key_openssh}"
-        }
-    }
-
-    tags {
-        environment = "${azurerm_resource_group.resource_group.name}"
-        role = "bastion"
-        os = "UbuntuServer-16.04-LTS"
-        ssh_user = "${var.bastion_username}"
-    }
+    # Firewall Group - Configure rules externally
+    nsg_name = "${azurerm_network_security_group.nsg.name}"
+  }
+  role = "bastion"
+  password = "${var.bastion_password}"
 }
 
 resource "azurerm_network_security_rule" "bastion" {
