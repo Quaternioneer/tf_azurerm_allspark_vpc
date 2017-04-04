@@ -3,7 +3,7 @@ module "bastion" {
 
   name      = "${var.name}_bastion"
   username = "${var.bastion_username}"
-  subnet = "${element(var.subnets,0)}"
+  subnet = "${element(var.subnet_names,0)}"
   vm = "std_ubuntu_server"
   role = "bastion"
   password = "${var.bastion_password}"
