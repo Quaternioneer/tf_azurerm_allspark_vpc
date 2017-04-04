@@ -16,5 +16,6 @@ output "allspark_data" {
 
     # Firewall Group - Configure rules externally
     nsg_name = "${azurerm_network_security_group.nsg.name}"
+    bastion_ip = "${module.bastion.public_ip}"
   }
 }
