@@ -64,6 +64,7 @@ resource "azurerm_virtual_machine" "bastion" {
 }
 
 resource "azurerm_network_security_rule" "bastion" {
+    depends_on                  = ["azurerm_virtual_machine.bastion"]
     name                        = "ssh_bastion"
     priority                    = 100
     direction                   = "Inbound"
