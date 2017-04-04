@@ -1,4 +1,4 @@
-resource "azurerm_public_ip" "ip" {
+resource "azurerm_public_ip" "bastion_ip" {
   name                         = "bastion_ip"
   location                     = "${var.location}"
   resource_group_name          = "${azurerm_resource_group.resource_group.name}"
@@ -14,7 +14,7 @@ resource "azurerm_network_interface" "public_nic" {
         name = "bastion_ip"
         subnet_id = "${azurerm_subnet.bastion.id}"
         private_ip_address_allocation = "dynamic"
-        public_ip_address_id = "${azurerm_public_ip.ip.id}"
+        public_ip_address_id = "${azurerm_public_ip.bastion_ip.id}"
     }
 }
 
@@ -34,7 +34,7 @@ resource "azurerm_virtual_machine" "bastion" {
 
     storage_os_disk {
         name = "${var.name}_os"
-        vhd_uri = "${azurerm_storage_account.storage.primary_blob_endpoint}${azurerm_storage_container.bastion.storage_container}/bastion_os_disk.vhd"
+        vhd_uri = "${azurerm_storage_account.storage.primary_blob_endpoint}${azurerm_storage_container.bastion.name}/bastion_os_disk.vhd"
         caching = "ReadWrite"
         create_option = "FromImage"
     }
@@ -59,7 +59,7 @@ resource "azurerm_virtual_machine" "bastion" {
         role = "bastion"
         os = "UbuntuServer-16.04-LTS"
         ssh_user = "${var.bastion_username}"
-        ssh_ip = "${azurerm_network_interface.public_nic.public_ip_address}"
+        ssh_ip = "${azurerm_public_ip.bastion_ip.ip_address}"
     }
 }
 
@@ -72,7 +72,7 @@ resource "azurerm_network_security_rule" "bastion" {
     source_port_range           = "*"
     destination_port_range      = "22"
     source_address_prefix       = "Internet"
-    destination_address_prefix  = "${azurerm_network_interface.public_nic.ip_address}"
+    destination_address_prefix  = "${azurerm_public_ip.bastion_ip.ip_address}"
     resource_group_name         = "${azurerm_resource_group.resource_group.name}"
     network_security_group_name = "${azurerm_network_security_group.nsg.name}"
 }
