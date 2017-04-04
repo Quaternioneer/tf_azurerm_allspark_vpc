@@ -72,7 +72,7 @@ resource "azurerm_network_security_rule" "bastion" {
     source_port_range           = "*"
     destination_port_range      = "22"
     source_address_prefix       = "Internet"
-    destination_address_prefix  = "${azurerm_network_interface.public_nic.public_ip_address}"
+    destination_address_prefix  = "${azurerm_network_interface.public_nic.ip_address}"
     resource_group_name         = "${azurerm_resource_group.resource_group.name}"
     network_security_group_name = "${azurerm_network_security_group.nsg.name}"
 }
