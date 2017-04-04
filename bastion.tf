@@ -1,7 +1,7 @@
 module "bastion" {
   source    = "github.com/broomyocymru/tf_azurerm_allspark_vm"
 
-  name      = "${var.name}_bastion"
+  name      = "${var.name}-bastion"
   username = "${var.bastion_username}"
   subnet = "${element(var.subnet_names,0)}"
   vm = "std_ubuntu_server"
