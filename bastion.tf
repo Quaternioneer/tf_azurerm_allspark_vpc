@@ -59,12 +59,10 @@ resource "azurerm_virtual_machine" "bastion" {
         role = "bastion"
         os = "UbuntuServer-16.04-LTS"
         ssh_user = "${var.bastion_username}"
-        ssh_ip = "${azurerm_public_ip.bastion_ip.ip_address}"
     }
 }
 
 resource "azurerm_network_security_rule" "bastion" {
-    depends_on                  = ["azurerm_virtual_machine.bastion"]
     name                        = "ssh_bastion"
     priority                    = 100
     direction                   = "Inbound"
