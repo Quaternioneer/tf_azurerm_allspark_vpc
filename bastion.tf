@@ -1,9 +1,14 @@
 module "bastion" {
   source    = "github.com/broomyocymru/tf_azurerm_allspark_vm"
+
   name      = "${var.name}_bastion"
   username = "${var.bastion_username}"
   subnet = "${element(var.subnets,0)}"
   vm = "std_ubuntu_server"
+  role = "bastion"
+  password = "${var.bastion_password}"
+  public_ip = 1
+
   allspark = {
     location = "${var.location}"
     resource_group_name = "${azurerm_resource_group.resource_group.name}"
@@ -22,8 +27,6 @@ module "bastion" {
     # Firewall Group - Configure rules externally
     nsg_name = "${azurerm_network_security_group.nsg.name}"
   }
-  role = "bastion"
-  password = "${var.bastion_password}"
 }
 
 resource "azurerm_network_security_rule" "bastion" {
