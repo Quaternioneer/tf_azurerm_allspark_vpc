@@ -18,6 +18,7 @@ output "allspark_data" {
     nsg_name = "${azurerm_network_security_group.nsg.name}"
 
     bastion_ip = "${module.bastion.public_ip}"
+    bastion_private_ip = "${module.bastion.private_ip}"
     bastion_username = "${var.bastion_username}"
   }
 }
