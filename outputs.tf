@@ -3,6 +3,7 @@ output "allspark_data" {
     location = "${var.location}"
     resource_group_name = "${azurerm_resource_group.resource_group.name}"
     ssh_public = "${tls_private_key.ssh.public_key_openssh}"
+    identity_file = "${path.cwd}${var.ssh_dir}/allspark_rsa"
 
     # Network Settings
     subnet_index = "${join(",", var.subnet_names)}"
