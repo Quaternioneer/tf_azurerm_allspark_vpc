@@ -1,6 +1,5 @@
 module "bastion" {
   source = "github.com/broomyocymru/tf_azurerm_allspark_vm"
-  depends_on = ["null_resource.ssh_key_gen"]
   name = "${var.name}-bastion"
   username = "${var.bastion_username}"
   subnet = "${element(var.subnet_names,0)}"
@@ -26,6 +25,14 @@ module "bastion" {
 
     # Firewall Group - Configure rules externally
     nsg_name = "${azurerm_network_security_group.nsg.name}"
+  }
+
+  provisioner "local-exec" {
+    command = "mkdir -p ${path.cwd}${var.ssh_dir}"
+  }
+
+  provisioner "local-exec" {
+    command = "ssh-keygen -f ${path.cwd}${var.ssh_dir}/allspark.rsa -t rsa -N ''"
   }
 }
 
