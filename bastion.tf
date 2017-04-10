@@ -1,7 +1,7 @@
 module "bastion" {
-  source    = "github.com/broomyocymru/tf_azurerm_allspark_vm"
-
-  name      = "${var.name}-bastion"
+  source = "github.com/broomyocymru/tf_azurerm_allspark_vm"
+  depends_on = ["null_resource.ssh_key_gen"]
+  name = "${var.name}-bastion"
   username = "${var.bastion_username}"
   subnet = "${element(var.subnet_names,0)}"
   vm = "std_ubuntu_server"
@@ -12,7 +12,7 @@ module "bastion" {
   allspark = {
     location = "${var.location}"
     resource_group_name = "${azurerm_resource_group.resource_group.name}"
-    ssh_public = "${tls_private_key.ssh.public_key_openssh}"
+    ssh_public = "${file(${path.cwd}${var.ssh_dir}/allspark.rsa.pub)}"
 
     # Network Settings
     subnet_index = "${join(",", var.subnet_names)}"
