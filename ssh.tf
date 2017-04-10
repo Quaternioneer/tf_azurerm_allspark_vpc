@@ -19,10 +19,10 @@ resource "null_resource" "ssh_key_gen" {
   }
 
   provisioner "local-exec" {
-    command = "echo -n '${tls_private_key.ssh.private_key_pem}' > ${path.cwd}${var.ssh_dir}/allspark_private && chmod 600 ${path.cwd}${var.ssh_dir}/allspark_private.pem"
+    command = "echo -n '${tls_private_key.ssh.private_key_pem}' > ${path.cwd}${var.ssh_dir}/allspark_private.pem && chmod 600 ${path.cwd}${var.ssh_dir}/allspark_private.pem"
   }
 
   provisioner "local-exec" {
-    command = "echo -n '${tls_private_key.ssh.public_key_pem}' > ${path.cwd}${var.ssh_dir}/allspark_public.pub && chmod 600 ${path.cwd}${var.ssh_dir}/allspark_public.pem"
+    command = "echo -n '${tls_private_key.ssh.public_key_pem}' > ${path.cwd}${var.ssh_dir}/allspark_public.pem && chmod 600 ${path.cwd}${var.ssh_dir}/allspark_public.pem"
   }
 }
