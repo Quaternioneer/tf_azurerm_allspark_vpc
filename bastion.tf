@@ -26,14 +26,6 @@ module "bastion" {
     # Firewall Group - Configure rules externally
     nsg_name = "${azurerm_network_security_group.nsg.name}"
   }
-
-  provisioner "local-exec" {
-    command = "mkdir -p ${path.cwd}${var.ssh_dir}"
-  }
-
-  provisioner "local-exec" {
-    command = "ssh-keygen -f ${path.cwd}${var.ssh_dir}/allspark.rsa -t rsa -N ''"
-  }
 }
 
 resource "azurerm_network_security_rule" "bastion" {

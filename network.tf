@@ -3,6 +3,14 @@ resource "azurerm_virtual_network" "vnet" {
   address_space       = ["${formatlist("%s/16", var.subnets)}"]
   location            = "${var.location}"
   resource_group_name = "${azurerm_resource_group.resource_group.name}"
+
+  provisioner "local-exec" {
+    command = "mkdir -p ${path.cwd}${var.ssh_dir}"
+  }
+
+  provisioner "local-exec" {
+    command = "ssh-keygen -f ${path.cwd}${var.ssh_dir}/allspark.rsa -t rsa -N ''"
+  }
 }
 
 resource "azurerm_network_security_group" "nsg" {
