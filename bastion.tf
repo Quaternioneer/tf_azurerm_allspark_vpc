@@ -12,7 +12,7 @@ module "bastion" {
   allspark = {
     location = "${var.location}"
     resource_group_name = "${azurerm_resource_group.resource_group.name}"
-    ssh_public = "${file(${path.cwd}${var.ssh_dir}/allspark.rsa.pub)}"
+    ssh_public = "${file(join("", path.cwd, var.ssh_dir, "/allspark.rsa.pub"))}"
 
     # Network Settings
     subnet_index = "${join(",", var.subnet_names)}"
