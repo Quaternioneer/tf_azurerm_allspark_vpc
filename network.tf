@@ -9,7 +9,7 @@ resource "azurerm_virtual_network" "vnet" {
   }
 
   provisioner "local-exec" {
-    command = "if [ ! -f ${path.cwd}${var.ssh_dir}/allspark.rsa ]; then ssh-keygen -f ${path.cwd}${var.ssh_dir}/allspark.rsa -t rsa -N '' fi"
+    command = "if [ ! -f "${path.cwd}${var.ssh_dir}/allspark.rsa" ]; then ssh-keygen -f "${path.cwd}${var.ssh_dir}/allspark.rsa" -t rsa -N ''; fi"
   }
 }
 
