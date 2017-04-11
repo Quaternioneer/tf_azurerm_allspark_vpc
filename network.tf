@@ -11,11 +11,6 @@ resource "azurerm_virtual_network" "vnet" {
   provisioner "local-exec" {
     command = "if [ ! -f ${path.cwd}${var.ssh_dir}/allspark.rsa ]; then ssh-keygen -f ${path.cwd}${var.ssh_dir}/allspark.rsa -t rsa -N '' fi"
   }
-
-  provisioner "local-exec" {
-    on_destroy = "attempt"
-    command = "rm -r ${path.cwd}${var.ssh_dir}"
-  }
 }
 
 resource "azurerm_network_security_group" "nsg" {
