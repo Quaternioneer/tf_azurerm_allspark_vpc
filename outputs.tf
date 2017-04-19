@@ -20,6 +20,6 @@ output "allspark_data" {
     bastion_username = "${var.bastion_config["username"]}"
 
     vnet_name = "${azurerm_virtual_network.vnet.name}"
-    vnet_id = "$(azurerm_virtual_network.vnet.id}"
+    vnet_id = "${azurerm_virtual_network.vnet.id}"
   }
 }
