@@ -18,5 +18,8 @@ output "allspark_data" {
     bastion_ip = "${azurerm_public_ip.bastion_ip.ip_address}"
     bastion_private_ip = "${azurerm_network_interface.bastion_private_nic.private_ip_address}"
     bastion_username = "${var.bastion_config["username"]}"
+
+    vnet_name = "${azurerm_virtual_network.vnet.name}"
+    vnet_id = "$(azurerm_virtual_network.vnet.id}"
   }
 }
