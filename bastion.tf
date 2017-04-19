@@ -86,7 +86,7 @@ resource "azurerm_virtual_machine" "bastion" {
         role = "bastion"
         os = "UbuntuServer-16.04-LTS"
         ssh_user = "${var.bastion_config["username"]}"
-        ssh_ip = "${azurerm_public_ip.bastion_ip.ip_address}"
+        ssh_ip = "${azurerm_network_interface.bastion_private_nic.private_ip_address}"
         remote_connection = "ssh"
         remote_port = "22"
     }
