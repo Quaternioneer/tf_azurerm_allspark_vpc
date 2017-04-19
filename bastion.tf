@@ -3,7 +3,7 @@ resource "azurerm_public_ip" "bastion_ip" {
   name                         = "bastion_ip"
   location                     = "${var.location}"
   resource_group_name          = "${azurerm_resource_group.resource_group.name}"
-  public_ip_address_allocation = "dynamic"
+  public_ip_address_allocation = "static"
 }
 
 resource "azurerm_lb" "bastion_lb" {
@@ -22,7 +22,7 @@ resource "azurerm_lb_nat_rule" "bastion_nat" {
   count                          = "${var.bastion_enabled}"
   resource_group_name            = "${azurerm_resource_group.resource_group.name}"
   loadbalancer_id                = "${azurerm_lb.bastion_lb.id}"
-  name                           = "SSH Access"
+  name                           = "ssh-access"
   protocol                       = "Tcp"
   frontend_port                  = 22
   backend_port                   = 22
