@@ -10,16 +10,13 @@ output "allspark_data" {
     subnet_name = "${join(",", azurerm_subnet.subnet.*.name)}"
     subnet_id = "${join(",", azurerm_subnet.subnet.*.id)}"
 
-    # Storage Details
-    storage_container_name = "${join(",", azurerm_storage_container.storage.*.name)}"
-    storage_account_name = "${azurerm_storage_account.storage.name}"
-    storage_account_endpoint = "${azurerm_storage_account.storage.primary_blob_endpoint}"
-
     # Firewall Group - Configure rules externally
-    nsg_name = "${azurerm_network_security_group.nsg.name}"
+    nsg_name = "${join(",", azurerm_network_security_group.nsg.*.name)}"
+    nsg_id = "${join(",", azurerm_network_security_group.nsg.*.id)}"
 
-    bastion_ip = "${module.bastion.public_ip}"
-    bastion_private_ip = "${element(split(",", module.bastion.private_ip),0)}"
-    bastion_username = "${var.bastion_username}"
+    # Bastion
+    bastion_ip = "${azurerm_public_ip.bastion_ip.ip_address}"
+    bastion_private_ip = "${azurerm_network_interface.bastion_private_nic.private_ip_address}"
+    bastion_username = "${var.bastion_config["username"]}"
   }
 }

@@ -14,20 +14,24 @@ variable "ssh_dir" {
 
 variable "subnets" {
   description = "Address spaces"
-  default     = ["172.10.0.0", "172.11.0.0", "172.12.0.0"]
+  default     = ["10.10.0.0"]
 }
 
 variable "subnet_names" {
   description = "Address spaces"
-  default     = ["admin", "dev", "prod"]
+  default     = ["admin"]
 }
 
-variable "bastion_username" {
-  description = "Bastion Username"
-  default     = "allspark"
+variable "bastion_enabled" {
+  description = "Set to one to expose the bastion"
+  default     = "0"
 }
 
-variable "bastion_password" {
-  description = "Bastion Password"
-  default     = ""
+variable "bastion_config" {
+  description = ""
+  type = "map"
+  default = {
+     username = ""
+     password = ""
+  }
 }

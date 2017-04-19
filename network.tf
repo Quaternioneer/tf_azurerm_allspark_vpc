@@ -14,7 +14,8 @@ resource "azurerm_virtual_network" "vnet" {
 }
 
 resource "azurerm_network_security_group" "nsg" {
-  name                = "${var.name}_nsg"
+  count               = "${length(var.subnets)}"
+  name                = "${var.name}_${element(var.subnet_names,count.index)}_nsg"
   location            = "${var.location}"
   resource_group_name = "${azurerm_resource_group.resource_group.name}"
 }
@@ -25,5 +26,5 @@ resource "azurerm_subnet" "subnet" {
   resource_group_name  = "${azurerm_resource_group.resource_group.name}"
   virtual_network_name = "${azurerm_virtual_network.vnet.name}"
   address_prefix       = "${element(var.subnets, count.index)}/24"
-  network_security_group_id = "${azurerm_network_security_group.nsg.id}"
+  network_security_group_id = "${azurerm_network_security_group.nsg.*.id[count.index]}"
 }
