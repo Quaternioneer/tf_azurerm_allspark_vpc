@@ -107,7 +107,7 @@ resource "azurerm_network_security_rule" "bastion" {
     network_security_group_name = "${azurerm_network_security_group.nsg.*.name[0]}"
 }
 
-resource "azurerm_network_security_rule" "bastion_out" {
+resource "azurerm_network_security_rule" "bastion_ssh_out" {
     count                       = "${var.bastion_enabled}"
     name                        = "ssh_bastion_outbound"
     priority                    = 200
@@ -122,7 +122,7 @@ resource "azurerm_network_security_rule" "bastion_out" {
     network_security_group_name = "${azurerm_network_security_group.nsg.*.name[0]}"
 }
 
-resource "azurerm_network_security_rule" "bastion_out" {
+resource "azurerm_network_security_rule" "bastion_rdp_out" {
     count                       = "${var.bastion_enabled}"
     name                        = "rdp_bastion_outbound"
     priority                    = 201
