@@ -94,14 +94,29 @@ resource "azurerm_virtual_machine" "bastion" {
 
 resource "azurerm_network_security_rule" "bastion" {
     count                       = "${var.bastion_enabled}"
-    name                        = "ssh_bastion"
-    priority                    = 100
+    name                        = "ssh_bastion_inbound"
+    priority                    = 200
     direction                   = "Inbound"
     access                      = "Allow"
     protocol                    = "Tcp"
     source_port_range           = "*"
     destination_port_range      = "22"
     source_address_prefix       = "Internet"
+    destination_address_prefix  = "*"
+    resource_group_name         = "${azurerm_resource_group.resource_group.name}"
+    network_security_group_name = "${azurerm_network_security_group.nsg.*.name[0]}"
+}
+
+resource "azurerm_network_security_rule" "bastion_out" {
+    count                       = "${var.bastion_enabled}"
+    name                        = "ssh_bastion_outbound"
+    priority                    = 200
+    direction                   = "Outbound"
+    access                      = "Allow"
+    protocol                    = "Tcp"
+    source_port_range           = "*"
+    destination_port_range      = "22"
+    source_address_prefix       = "VirtualNetwork"
     destination_address_prefix  = "*"
     resource_group_name         = "${azurerm_resource_group.resource_group.name}"
     network_security_group_name = "${azurerm_network_security_group.nsg.*.name[0]}"
