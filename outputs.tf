@@ -24,5 +24,6 @@ output "bastion_data" {
     bastion_ip = "${azurerm_public_ip.bastion_ip.ip_address}"
     bastion_private_ip = "${azurerm_network_interface.bastion_private_nic.private_ip_address}"
     bastion_username = "${var.bastion_config["username"]}"
+    identity_file = "${path.cwd}${var.ssh_dir}/allspark.rsa"
   }
 }
