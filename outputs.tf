@@ -15,9 +15,9 @@ output "allspark_data" {
     nsg_id = "${join(",", azurerm_network_security_group.nsg.*.id)}"
 
     # Bastion
-    bastion_ip = "${coalesce(azurerm_public_ip.bastion_ip.ip_address, "")}"
-    bastion_private_ip = "${coalesce(azurerm_network_interface.bastion_private_nic.private_ip_address, "")}"
-    bastion_username = "${coalesce(var.bastion_config["username"], "")}"
+    bastion_ip = "${coalesce(azurerm_public_ip.bastion_ip.*.ip_address, "x")}"
+    bastion_private_ip = "${coalesce(azurerm_network_interface.bastion_private_nic.*.private_ip_address, "x")}"
+    bastion_username = "${coalesce(var.bastion_config["username"], "x")}"
 
     vnet_name = "${azurerm_virtual_network.vnet.name}"
     vnet_id = "${azurerm_virtual_network.vnet.id}"
