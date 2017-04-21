@@ -4,7 +4,7 @@ variable "name" {
 
 variable "ssh_dir" {
   description = "Output path of generated ssh keys"
-  default     = "/../ssh" 
+  default     = "../ssh" 
 }
 
 variable "location" {
