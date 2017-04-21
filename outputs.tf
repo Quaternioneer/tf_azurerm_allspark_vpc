@@ -2,8 +2,8 @@ output "allspark_data" {
   value = {
     location = "${var.location}"
     resource_group_name = "${azurerm_resource_group.resource_group.name}"
-    ssh_public = "${file(format("%s%s%s", path.cwd, var.ssh_dir, "/allspark.rsa.pub"))}"
-    identity_file = "${path.cwd}${var.ssh_dir}/allspark.rsa"
+    ssh_public = "${file(format("%s%s", var.ssh_dir, "/allspark.rsa.pub"))}"
+    identity_file = "${var.ssh_dir}/allspark.rsa"
 
     # Network Settings
     subnet_index = "${join(",", var.subnet_names)}"
@@ -24,6 +24,6 @@ output "bastion_data" {
     bastion_ip = "${azurerm_public_ip.bastion_ip.ip_address}"
     bastion_private_ip = "${azurerm_network_interface.bastion_private_nic.private_ip_address}"
     bastion_username = "${var.bastion_config["username"]}"
-    identity_file = "${path.cwd}${var.ssh_dir}/allspark.rsa"
+    identity_file = "${var.ssh_dir}/allspark.rsa"
   }
 }

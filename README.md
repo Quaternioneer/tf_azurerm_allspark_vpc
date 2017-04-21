@@ -3,8 +3,8 @@ Terraform module to configure an AllSpark VPC configuration in Azure.
 
 ## Input variables
   * name [required]
+  * ssh_dir [optional - '/../ssh']
   * location [optional - 'UK West']
-  * ssh_dir [optional - './ssh']
   * subnets [optional - ["10.10.0.0", "10.11.0.0", "10.12.0.0"]]
   * subnet_names [optional - ["admin", "dev", "prod"]]
 

@@ -2,14 +2,14 @@ variable "name" {
   description = "Name of the admin resource group, used for DevOps tools"
 }
 
+variable "ssh_dir" {
+  description = "Output path of generated ssh keys"
+  default     = "/../ssh" 
+}
+
 variable "location" {
   description = "azurerm_location"
   default     = "UK West"
-}
-
-variable "ssh_dir" {
-  description = "Output path of generated ssh keys"
-  default = "/ssh"
 }
 
 variable "subnets" {

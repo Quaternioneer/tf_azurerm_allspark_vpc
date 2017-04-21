@@ -77,7 +77,7 @@ resource "azurerm_virtual_machine" "bastion" {
 
         ssh_keys {
           path = "/home/${var.bastion_config["username"]}/.ssh/authorized_keys"
-          key_data = "${file(format("%s%s%s", path.cwd, var.ssh_dir, "/allspark.rsa.pub"))}"
+          key_data = "${file(format("%s%s", var.ssh_dir, "/allspark.rsa.pub"))}"
         }
     }
 

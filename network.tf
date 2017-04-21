@@ -5,11 +5,11 @@ resource "azurerm_virtual_network" "vnet" {
   resource_group_name = "${azurerm_resource_group.resource_group.name}"
 
   provisioner "local-exec" {
-    command = "mkdir -p ${path.cwd}${var.ssh_dir}"
+    command = "mkdir -p ${var.ssh_dir}"
   }
 
   provisioner "local-exec" {
-    command = "if [ ! -f '${path.cwd}${var.ssh_dir}/allspark.rsa' ]; then ssh-keygen -f '${path.cwd}${var.ssh_dir}/allspark.rsa' -t rsa -N ''; fi"
+    command = "if [ ! -f '${var.ssh_dir}/allspark.rsa' ]; then ssh-keygen -f '${var.ssh_dir}/allspark.rsa' -t rsa -N ''; fi"
   }
 }
 
