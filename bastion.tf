@@ -107,7 +107,7 @@ resource "azurerm_virtual_machine_extension" "install-proxy" {
   name                 = "${var.name}-bastion-ext0"
   location             = "${var.location}"
   resource_group_name  = "${azurerm_resource_group.resource_group.name}"
-  virtual_machine_name = "${azurerm_virtual_machine.bastion.name}"
+  virtual_machine_name = "${var.name}-bastion"
   publisher            = "Microsoft.OSTCExtensions"
   type                 = "CustomScriptForLinux"
   type_handler_version = "2.0.2"
