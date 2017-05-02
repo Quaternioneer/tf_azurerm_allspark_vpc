@@ -29,6 +29,17 @@ resource "azurerm_lb_nat_rule" "bastion_nat" {
   frontend_ip_configuration_name = "bastion_ip_address"
 }
 
+resource "azurerm_lb_nat_rule" "bastion_winrm" {
+  count                          = "${var.bastion_enabled}"
+  resource_group_name            = "${azurerm_resource_group.resource_group.name}"
+  loadbalancer_id                = "${azurerm_lb.bastion_lb.id}"
+  name                           = "winrm-access"
+  protocol                       = "Tcp"
+  frontend_port                  = 7000
+  backend_port                   = 5986
+  frontend_ip_configuration_name = "bastion_ip_address"
+}
+
 resource "azurerm_network_interface" "bastion_private_nic" {
     count = "${var.bastion_enabled}"
     name = "${var.name}-bastion-nic0"
@@ -39,7 +50,7 @@ resource "azurerm_network_interface" "bastion_private_nic" {
         name = "${var.name}-bastion-ip"
         subnet_id = "${azurerm_subnet.subnet.*.id[0]}"
         private_ip_address_allocation = "dynamic"
-        load_balancer_inbound_nat_rules_ids = ["${azurerm_lb_nat_rule.bastion_nat.id}"]
+        load_balancer_inbound_nat_rules_ids = ["${azurerm_lb_nat_rule.bastion_nat.id}", "${azurerm_lb_nat_rule.bastion_winrm.id}"]
     }
 }
 
@@ -107,6 +118,21 @@ resource "azurerm_network_security_rule" "bastion" {
     network_security_group_name = "${azurerm_network_security_group.nsg.*.name[0]}"
 }
 
+resource "azurerm_network_security_rule" "bastion_winrm" {
+    count                       = "${var.bastion_enabled}"
+    name                        = "winrm_bastion_inbound"
+    priority                    = 200
+    direction                   = "Inbound"
+    access                      = "Allow"
+    protocol                    = "Tcp"
+    source_port_range           = "*"
+    destination_port_range      = "5986"
+    source_address_prefix       = "Internet"
+    destination_address_prefix  = "*"
+    resource_group_name         = "${azurerm_resource_group.resource_group.name}"
+    network_security_group_name = "${azurerm_network_security_group.nsg.*.name[0]}"
+}
+
 resource "azurerm_network_security_rule" "bastion_ssh_out" {
     count                       = "${var.bastion_enabled}"
     name                        = "ssh_bastion_outbound"
@@ -131,6 +157,21 @@ resource "azurerm_network_security_rule" "bastion_rdp_out" {
     protocol                    = "Tcp"
     source_port_range           = "*"
     destination_port_range      = "3389"
+    source_address_prefix       = "VirtualNetwork"
+    destination_address_prefix  = "*"
+    resource_group_name         = "${azurerm_resource_group.resource_group.name}"
+    network_security_group_name = "${azurerm_network_security_group.nsg.*.name[0]}"
+}
+
+resource "azurerm_network_security_rule" "bastion_winrm_out" {
+    count                       = "${var.bastion_enabled}"
+    name                        = "winrm_bastion_outbound"
+    priority                    = 202
+    direction                   = "Outbound"
+    access                      = "Allow"
+    protocol                    = "Tcp"
+    source_port_range           = "*"
+    destination_port_range      = "5986"
     source_address_prefix       = "VirtualNetwork"
     destination_address_prefix  = "*"
     resource_group_name         = "${azurerm_resource_group.resource_group.name}"
