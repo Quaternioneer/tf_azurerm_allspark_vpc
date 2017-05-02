@@ -104,6 +104,7 @@ resource "azurerm_virtual_machine" "bastion" {
 }
 
 resource "azurerm_virtual_machine_extension" "install-proxy" {
+  count                = "${var.bastion_enabled}"
   name                 = "${var.name}-bastion-ext0"
   location             = "${var.location}"
   resource_group_name  = "${azurerm_resource_group.resource_group.name}"
