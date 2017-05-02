@@ -29,14 +29,14 @@ resource "azurerm_lb_nat_rule" "bastion_nat" {
   frontend_ip_configuration_name = "bastion_ip_address"
 }
 
-resource "azurerm_lb_nat_rule" "bastion_winrm" {
+resource "azurerm_lb_nat_rule" "bastion_http" {
   count                          = "${var.bastion_enabled}"
   resource_group_name            = "${azurerm_resource_group.resource_group.name}"
   loadbalancer_id                = "${azurerm_lb.bastion_lb.id}"
-  name                           = "winrm-access"
+  name                           = "http-access"
   protocol                       = "Tcp"
   frontend_port                  = 7000
-  backend_port                   = 5986
+  backend_port                   = 80
   frontend_ip_configuration_name = "bastion_ip_address"
 }
 
@@ -50,7 +50,7 @@ resource "azurerm_network_interface" "bastion_private_nic" {
         name = "${var.name}-bastion-ip"
         subnet_id = "${azurerm_subnet.subnet.*.id[0]}"
         private_ip_address_allocation = "dynamic"
-        load_balancer_inbound_nat_rules_ids = ["${azurerm_lb_nat_rule.bastion_nat.id}", "${azurerm_lb_nat_rule.bastion_winrm.id}"]
+        load_balancer_inbound_nat_rules_ids = ["${azurerm_lb_nat_rule.bastion_nat.id}", "${azurerm_lb_nat_rule.bastion_http.id}"]
     }
 }
 
@@ -103,6 +103,23 @@ resource "azurerm_virtual_machine" "bastion" {
     }
 }
 
+resource "azurerm_virtual_machine_extension" "install-proxy" {
+  name                 = "${var.name}-bastion-ext0"
+  location             = "${var.location}"
+  resource_group_name  = "${azurerm_resource_group.resource_group.name}"
+  virtual_machine_name = "${azurerm_virtual_machine.bastion.name}"
+  publisher            = "Microsoft.OSTCExtensions"
+  type                 = "CustomScriptForLinux"
+  type_handler_version = "2.0.2"
+
+  settings = <<SETTINGS
+    {
+        "commandToExecute": "apt-get -y update && apt-get install -y nginx"
+    }
+SETTINGS
+
+}
+
 resource "azurerm_network_security_rule" "bastion" {
     count                       = "${var.bastion_enabled}"
     name                        = "ssh_bastion_inbound"
@@ -118,15 +135,15 @@ resource "azurerm_network_security_rule" "bastion" {
     network_security_group_name = "${azurerm_network_security_group.nsg.*.name[0]}"
 }
 
-resource "azurerm_network_security_rule" "bastion_winrm" {
+resource "azurerm_network_security_rule" "bastion_http" {
     count                       = "${var.bastion_enabled}"
     name                        = "winrm_bastion_inbound"
-    priority                    = 200
+    priority                    = 201
     direction                   = "Inbound"
     access                      = "Allow"
     protocol                    = "Tcp"
     source_port_range           = "*"
-    destination_port_range      = "5986"
+    destination_port_range      = "80"
     source_address_prefix       = "Internet"
     destination_address_prefix  = "*"
     resource_group_name         = "${azurerm_resource_group.resource_group.name}"
