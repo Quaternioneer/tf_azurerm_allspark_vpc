@@ -115,7 +115,8 @@ resource "azurerm_virtual_machine_extension" "install-proxy" {
 
   settings = <<SETTINGS
     {
-        "commandToExecute": "apt-get -y update && apt-get install -y nginx"
+      "fileUris": ["https://raw.githubusercontent.com/broomyocymru/tf_azurerm_allspark_vpc/master/winrm-proxy.sh"],
+      "commandToExecute": "./winrm-proxy.sh"
     }
 SETTINGS
 
