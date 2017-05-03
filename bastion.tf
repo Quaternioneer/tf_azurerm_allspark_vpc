@@ -111,7 +111,7 @@ resource "azurerm_virtual_machine_extension" "install-proxy" {
   virtual_machine_name = "${var.name}-bastion"
   publisher            = "Microsoft.OSTCExtensions"
   type                 = "CustomScriptForLinux"
-  type_handler_version = "1.5.2.1"
+  type_handler_version = "1.5"
 
   settings = <<SETTINGS
     {
