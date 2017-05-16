@@ -73,7 +73,7 @@ resource "azurerm_virtual_machine" "bastion" {
     }
 
     os_profile_linux_config {
-        disable_password_authentication = false
+        disable_password_authentication = true
 
         ssh_keys {
           path = "/home/${var.bastion_config["username"]}/.ssh/authorized_keys"
