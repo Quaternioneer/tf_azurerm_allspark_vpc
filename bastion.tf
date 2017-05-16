@@ -29,17 +29,6 @@ resource "azurerm_lb_nat_rule" "bastion_nat" {
   frontend_ip_configuration_name = "bastion_ip_address"
 }
 
-resource "azurerm_lb_nat_rule" "bastion_http" {
-  count                          = "${var.bastion_enabled}"
-  resource_group_name            = "${azurerm_resource_group.resource_group.name}"
-  loadbalancer_id                = "${azurerm_lb.bastion_lb.id}"
-  name                           = "http-access"
-  protocol                       = "Tcp"
-  frontend_port                  = 7000
-  backend_port                   = 80
-  frontend_ip_configuration_name = "bastion_ip_address"
-}
-
 resource "azurerm_network_interface" "bastion_private_nic" {
     count = "${var.bastion_enabled}"
     name = "${var.name}-bastion-nic0"
@@ -50,7 +39,7 @@ resource "azurerm_network_interface" "bastion_private_nic" {
         name = "${var.name}-bastion-ip"
         subnet_id = "${azurerm_subnet.subnet.*.id[0]}"
         private_ip_address_allocation = "dynamic"
-        load_balancer_inbound_nat_rules_ids = ["${azurerm_lb_nat_rule.bastion_nat.id}", "${azurerm_lb_nat_rule.bastion_http.id}"]
+        load_balancer_inbound_nat_rules_ids = ["${azurerm_lb_nat_rule.bastion_nat.id}"]
     }
 }
 
@@ -84,7 +73,7 @@ resource "azurerm_virtual_machine" "bastion" {
     }
 
     os_profile_linux_config {
-        disable_password_authentication = true
+        disable_password_authentication = false
 
         ssh_keys {
           path = "/home/${var.bastion_config["username"]}/.ssh/authorized_keys"
@@ -101,25 +90,6 @@ resource "azurerm_virtual_machine" "bastion" {
         remote_connection = "ssh"
         remote_port = "22"
     }
-}
-
-resource "azurerm_virtual_machine_extension" "install-proxy" {
-  count                = "${var.bastion_enabled}"
-  name                 = "${var.name}-bastion-ext0"
-  location             = "${var.location}"
-  resource_group_name  = "${azurerm_resource_group.resource_group.name}"
-  virtual_machine_name = "${var.name}-bastion"
-  publisher            = "Microsoft.OSTCExtensions"
-  type                 = "CustomScriptForLinux"
-  type_handler_version = "1.5"
-
-  settings = <<SETTINGS
-    {
-      "fileUris": ["https://raw.githubusercontent.com/broomyocymru/tf_azurerm_allspark_vpc/master/winrm-proxy.sh"],
-      "commandToExecute": "./winrm-proxy.sh"
-    }
-SETTINGS
-
 }
 
 resource "azurerm_network_security_rule" "bastion" {
