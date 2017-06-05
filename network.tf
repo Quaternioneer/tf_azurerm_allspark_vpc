@@ -11,6 +11,11 @@ resource "azurerm_virtual_network" "vnet" {
   provisioner "local-exec" {
     command = "if [ ! -f '${var.ssh_dir}/allspark.rsa' ]; then ssh-keygen -f '${var.ssh_dir}/allspark.rsa' -t rsa -N ''; fi"
   }
+
+  tags {
+    project = "${var.project}"
+    environment = "${var.environment}"
+  }
 }
 
 resource "azurerm_network_security_group" "nsg" {
@@ -18,6 +23,11 @@ resource "azurerm_network_security_group" "nsg" {
   name                = "${var.name}_${element(var.subnet_names,count.index)}_nsg"
   location            = "${var.location}"
   resource_group_name = "${azurerm_resource_group.resource_group.name}"
+
+  tags {
+    project = "${var.project}"
+    environment = "${var.environment}"
+  }
 }
 
 resource "azurerm_subnet" "subnet" {

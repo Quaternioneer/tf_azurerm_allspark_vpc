@@ -4,12 +4,22 @@ variable "name" {
 
 variable "ssh_dir" {
   description = "Output path of generated ssh keys"
-  default     = "../ssh" 
+  default     = "../ssh"
 }
 
 variable "location" {
   description = "azurerm_location"
   default     = "UK West"
+}
+
+variable "project" {
+  description = "project"
+  default     = "allspark"
+}
+
+variable "environment" {
+  description = "environment"
+  default     = "dev"
 }
 
 variable "subnets" {

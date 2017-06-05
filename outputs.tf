@@ -16,6 +16,9 @@ output "allspark_data" {
 
     vnet_name = "${azurerm_virtual_network.vnet.name}"
     vnet_id = "${azurerm_virtual_network.vnet.id}"
+
+    tag_proj = "${var.project}"
+    tag_env = "${var.environment}"
   }
 }
 

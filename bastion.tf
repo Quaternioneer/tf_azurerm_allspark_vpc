@@ -4,6 +4,11 @@ resource "azurerm_public_ip" "bastion_ip" {
   location                     = "${var.location}"
   resource_group_name          = "${azurerm_resource_group.resource_group.name}"
   public_ip_address_allocation = "static"
+
+  tags {
+    project = "${var.project}"
+    environment = "${var.environment}"
+  }
 }
 
 resource "azurerm_lb" "bastion_lb" {
