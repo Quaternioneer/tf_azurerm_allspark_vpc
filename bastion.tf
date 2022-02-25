@@ -1,18 +1,19 @@
+#because out topology requires at most 1 bastion per vnet, I'm commenting out the count option to set number of bastions
 resource "azurerm_public_ip" "bastion_ip" {
-  count                        = "${var.bastion_enabled}"
+ # count                        = "${var.bastion_enabled}"
   name                         = "bastion_ip"
   location                     = "${var.location}"
   resource_group_name          = "${azurerm_resource_group.resource_group.name}"
-  public_ip_address_allocation = "static"
+  allocation_method = "Static"
 
-  tags {
+  tags = {
     project = "${var.project}"
     environment = "${var.environment}"
   }
 }
 
 resource "azurerm_lb" "bastion_lb" {
-  count               = "${var.bastion_enabled}"
+ # count               = "${var.bastion_enabled}"
   name                = "bastion_lb"
   location            = "${var.location}"
   resource_group_name = "${azurerm_resource_group.resource_group.name}"
@@ -24,7 +25,7 @@ resource "azurerm_lb" "bastion_lb" {
 }
 
 resource "azurerm_lb_nat_rule" "bastion_nat" {
-  count                          = "${var.bastion_enabled}"
+ # count                          = "${var.bastion_enabled}"
   resource_group_name            = "${azurerm_resource_group.resource_group.name}"
   loadbalancer_id                = "${azurerm_lb.bastion_lb.id}"
   name                           = "ssh-access"
@@ -35,31 +36,36 @@ resource "azurerm_lb_nat_rule" "bastion_nat" {
 }
 
 resource "azurerm_network_interface" "bastion_private_nic" {
-    count = "${var.bastion_enabled}"
+ #   count = "${var.bastion_enabled}"
     name = "${var.name}-bastion-nic0"
     location = "${var.location}"
     resource_group_name = "${azurerm_resource_group.resource_group.name}"
 
     ip_configuration {
-        name = "${var.name}-bastion-ip"
+        name = "${var.name}-bastion-ip-config"
         subnet_id = "${azurerm_subnet.subnet.*.id[0]}"
         private_ip_address_allocation = "dynamic"
-        load_balancer_inbound_nat_rules_ids = ["${azurerm_lb_nat_rule.bastion_nat.id}"]
     }
 }
 
+resource "azurerm_network_interface_nat_rule_association" "nic-nsg" {
+  network_interface_id  = "${azurerm_network_interface.bastion_private_nic.id}"
+  ip_configuration_name = "${var.name}-bastion-ip-config"
+  nat_rule_id           = "${azurerm_lb_nat_rule.bastion_nat.id}"
+}
+
 resource "azurerm_virtual_machine" "bastion" {
-    count = "${var.bastion_enabled}"
+ #   count = "${var.bastion_enabled}"
     name = "${var.name}-bastion"
     location = "${var.location}"
     resource_group_name = "${azurerm_resource_group.resource_group.name}"
     network_interface_ids = ["${azurerm_network_interface.bastion_private_nic.id}"]
-    vm_size = "Standard_D2_v2"
+    vm_size = "Standard_B1s"
 
     storage_image_reference {
         publisher = "Canonical"
         offer = "UbuntuServer"
-        sku = "16.04-LTS"
+        sku = "18.04-LTS"
         version = "latest"
     }
 
@@ -78,18 +84,18 @@ resource "azurerm_virtual_machine" "bastion" {
     }
 
     os_profile_linux_config {
-        disable_password_authentication = true
+        disable_password_authentication = false
 
-        ssh_keys {
-          path = "/home/${var.bastion_config["username"]}/.ssh/authorized_keys"
-          key_data = "${file(format("%s%s", var.ssh_dir, "/allspark.rsa.pub"))}"
-        }
+#        ssh_keys {
+ #         path = "/home/${var.bastion_config["username"]}/.ssh/authorized_keys"
+ #         key_data = "${file(format("%s%s", var.ssh_dir, "/allspark.rsa.pub"))}"
+ #       }
     }
 
-    tags {
+    tags = {
         environment = "${azurerm_resource_group.resource_group.name}"
         role = "bastion"
-        os = "UbuntuServer-16.04-LTS"
+        os = "UbuntuServer-18.04-LTS"
         ssh_user = "${var.bastion_config["username"]}"
         ssh_ip = "${azurerm_network_interface.bastion_private_nic.private_ip_address}"
         remote_connection = "ssh"
@@ -98,7 +104,7 @@ resource "azurerm_virtual_machine" "bastion" {
 }
 
 resource "azurerm_network_security_rule" "bastion" {
-    count                       = "${var.bastion_enabled}"
+ #   count                       = "${var.bastion_enabled}"
     name                        = "ssh_bastion_inbound"
     priority                    = 200
     direction                   = "Inbound"
@@ -113,7 +119,7 @@ resource "azurerm_network_security_rule" "bastion" {
 }
 
 resource "azurerm_network_security_rule" "bastion_http" {
-    count                       = "${var.bastion_enabled}"
+ #   count                       = "${var.bastion_enabled}"
     name                        = "winrm_bastion_inbound"
     priority                    = 201
     direction                   = "Inbound"
@@ -128,7 +134,7 @@ resource "azurerm_network_security_rule" "bastion_http" {
 }
 
 resource "azurerm_network_security_rule" "bastion_ssh_out" {
-    count                       = "${var.bastion_enabled}"
+ #   count                       = "${var.bastion_enabled}"
     name                        = "ssh_bastion_outbound"
     priority                    = 200
     direction                   = "Outbound"
@@ -143,7 +149,7 @@ resource "azurerm_network_security_rule" "bastion_ssh_out" {
 }
 
 resource "azurerm_network_security_rule" "bastion_rdp_out" {
-    count                       = "${var.bastion_enabled}"
+ #   count                       = "${var.bastion_enabled}"
     name                        = "rdp_bastion_outbound"
     priority                    = 201
     direction                   = "Outbound"
@@ -158,7 +164,7 @@ resource "azurerm_network_security_rule" "bastion_rdp_out" {
 }
 
 resource "azurerm_network_security_rule" "bastion_winrm_out" {
-    count                       = "${var.bastion_enabled}"
+ #   count                       = "${var.bastion_enabled}"
     name                        = "winrm_bastion_outbound"
     priority                    = 202
     direction                   = "Outbound"

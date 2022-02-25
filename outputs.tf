@@ -2,7 +2,7 @@ output "allspark_data" {
   value = {
     location = "${var.location}"
     resource_group_name = "${azurerm_resource_group.resource_group.name}"
-    ssh_public = "${file(format("%s%s", var.ssh_dir, "/allspark.rsa.pub"))}"
+#    ssh_public = "${file(format("%s%s", var.ssh_dir, "/allspark.rsa.pub"))}"
     identity_file = "${var.ssh_dir}/allspark.rsa"
 
     # Network Settings
