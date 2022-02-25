@@ -16,7 +16,8 @@ Terraform module to configure an AllSpark VPC configuration in Azure.
 ## Example use
 
     module "allspark" {
-      source  = "github.com/broomyocymru/tf_azurerm_allspark_vpc"
+      source  = "github.com/Quaternioneer/tf_azurerm_allspark_vpc"
+
       name = "allspark"
     }
 

@@ -39,7 +39,7 @@ variable "bastion_enabled" {
 
 variable "bastion_config" {
   description = ""
-  type = "map"
+  type = map
   default = {
      username = ""
      password = ""
